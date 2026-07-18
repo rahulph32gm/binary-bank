@@ -149,7 +149,7 @@ class Bank:
         pin= int(input("PIN: "))
         for i in Bank.__data:
             if i["Account_num"]== acc and i["PIN"]== pin:
-                print(f"Varification complite\nNamaste {i["First_Name"]+ " " +i["Last_Name"]}")
+                print(f"Varification complite\nNamaste {i['First_Name']} {i['Last_Name']}")
                 return i
         return None
     
