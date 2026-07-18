@@ -3,12 +3,8 @@ from datetime import datetime
 import pandas as pd
 import plotly.express as px
 
-# --- 1. CLEAN BACKEND IMPORT ENGINE ---
-# --- 1. CLEAN BACKEND IMPORT ENGINE ---
-import sys
-import os
-
-# Ensuring local path lookup structure
+# --- 1. ROBUST BACKEND ENGINE BINDING ---
+# Directly targeting main.py since it exists in the root explorer panel
 try:
     import main
     Bank = main.Bank
@@ -20,7 +16,7 @@ except Exception as e:
 # Page Configuration
 st.set_page_config(page_title="Binary Bank (BB)", page_icon="🏦", layout="centered")
 
-# Backend Instance setup
+# Backend Instance setup with verification safety check
 if 'bank' not in st.session_state:
     st.session_state.bank = Bank()
 
