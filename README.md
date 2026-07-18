@@ -40,3 +40,8 @@ Binary Bank (BB) is a robust Banking Application designed to demonstrate the pow
    ```bash
    git clone [https://github.com/rahulph32gm/binary-bank.git](https://github.com/rahulph32gm/binary-bank.git)
    ```
+
+2. **Working link**
+   ```bash
+   https://binary-bank-omfyjdjwhqyupgtay5y78f.streamlit.app/
+   ```
