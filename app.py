@@ -7,9 +7,14 @@ import plotly.express as px  # Saare imports upar shift kar diye hain!
 # IMPORTANT: Agar tumhare backend class code ki file ka naam 'bank.py' hai, 
 # toh niche 'from main' ko badalkar 'from bank' kar dena!
 try:
-    from main import Bank  
-except ImportError:
-    from bank import Bank
+    import main
+    Bank = main.Bank
+except Exception:
+    try:
+        import bank
+        Bank = bank.Bank
+    except Exception:
+        st.error("❌ Backend core engine file not found in repository!")
 
 # Page Configuration
 st.set_page_config(page_title="Binary Bank (BB)", page_icon="🏦", layout="centered")
