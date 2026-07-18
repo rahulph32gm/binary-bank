@@ -1,20 +1,20 @@
 import streamlit as st
 from datetime import datetime
 import pandas as pd
-import plotly.express as px  # Saare imports upar shift kar diye hain!
+import plotly.express as px
 
-# --- 1. BACKEND ENGINE FILE SYSTEM BINDING ---
-# IMPORTANT: Agar tumhare backend class code ki file ka naam 'bank.py' hai, 
-# toh niche 'from main' ko badalkar 'from bank' kar dena!
-try:
-    import main
-    Bank = main.Bank
-except Exception:
+# --- 1. CLEAN BACKEND IMPORT ENGINE ---
+# --- 1. CLEAN BACKEND IMPORT ENGINE ---
+import sys
+import os
+
+# Ensuring local path lookup structure
+if 'Bank' not in globals():
     try:
-        import bank
-        Bank = bank.Bank
+        import main
+        Bank = main.Bank
     except Exception:
-        st.error("❌ Backend core engine file not found in repository!")
+        st.error("❌ Backend core engine (main.py) file not found in repository!")
 
 # Page Configuration
 st.set_page_config(page_title="Binary Bank (BB)", page_icon="🏦", layout="centered")
@@ -158,7 +158,6 @@ elif choice == "⚙️ Update/Delete":
         else:
             st.error("Invalid Credentials")
 
-# --- 3. ADMIN ANALYTICS SECTION ---
 elif choice == "📊 Admin Analytics":
     st.subheader("Bank Performance Insights")
     df = pd.DataFrame(Bank._Bank__data)
