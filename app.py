@@ -9,12 +9,13 @@ import sys
 import os
 
 # Ensuring local path lookup structure
-if 'Bank' not in globals():
-    try:
-        import main
-        Bank = main.Bank
-    except Exception:
-        st.error("❌ Backend core engine (main.py) file not found in repository!")
+try:
+    import main
+    Bank = main.Bank
+except Exception as e:
+    st.error(f"❌ Core engine configuration error: {str(e)}")
+    st.info("💡 Solution: Ensure 'main.py' contains the 'Bank' class and has no internal code syntax compilation drops.")
+    st.stop()  # Standard Streamlit execution halts if backend core fails
 
 # Page Configuration
 st.set_page_config(page_title="Binary Bank (BB)", page_icon="🏦", layout="centered")
