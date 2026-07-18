@@ -15,6 +15,10 @@ Binary Bank (BB) is a robust Banking Application designed to demonstrate the pow
 - **Dynamic Transactions:** Real-time Deposit and Withdrawal logic with limit validations.
 - **Data Analytics Dashboard:** Built-in Admin dashboard using **Pandas** and **Plotly** to visualize gender distribution and wealth metrics.
 - **Modular Architecture:** Separation of Backend Logic (`main.py`) and Frontend UI (`app.py`).
+- 
+## Development & Architecture
+* **Core Backend Engine:** Designed and architected from scratch using Python OOPs concepts (Encapsulation, Class Methods, and JSON Serialization).
+* **Frontend Interface:** Leveraged Streamlit for swift dashboard prototyping, utilizing AI-assisted UI design patterns for clean layouts and data analytics component integration.
 
 ## Tech Stack
 
