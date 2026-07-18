@@ -1,17 +1,26 @@
 import streamlit as st
-from main import Bank  # Import tera backend engine
 from datetime import datetime
+import pandas as pd
+import plotly.express as px  # Saare imports upar shift kar diye hain!
+
+# --- 1. BACKEND ENGINE FILE SYSTEM BINDING ---
+# IMPORTANT: Agar tumhare backend class code ki file ka naam 'bank.py' hai, 
+# toh niche 'from main' ko badalkar 'from bank' kar dena!
+try:
+    from main import Bank  
+except ImportError:
+    from bank import Bank
 
 # Page Configuration
 st.set_page_config(page_title="Binary Bank (BB)", page_icon="🏦", layout="centered")
 
-# Backend Instance setup (Session state use karte hain taaki refresh pe data na ud jaye)
+# Backend Instance setup
 if 'bank' not in st.session_state:
     st.session_state.bank = Bank()
 
 bank = st.session_state.bank
 
-# UI SIDEBAR
+# --- 2. UI SIDEBAR NAVIGATION ---
 st.sidebar.title("🏦 BB Navigation")
 menu = ["Home", "📜 T&C", "🆕 Create Account", "💸 Transactions", "🔍 View Details", "⚙️ Update/Delete", "📊 Admin Analytics"]
 choice = st.sidebar.radio("Go to", menu)
@@ -31,7 +40,7 @@ elif choice == "📜 T&C":
 elif choice == "🆕 Create Account":
     st.subheader("Fill details to join BB Society")
     with st.form("reg_form", clear_on_submit=True):
-        f_name = st.text_input("First Name (as in Aadhaar)")
+        f_name = st.text_input("First Name (as in Identity Card)")
         l_name = st.text_input("Last Name")
         dob = st.date_input("Date of Birth", min_value=datetime(1950,1,1), max_value=datetime.today())
         pin = st.number_input("Set 4-Digit PIN", min_value=1000, max_value=9999)
@@ -40,7 +49,6 @@ elif choice == "🆕 Create Account":
         gender = st.selectbox("Gender", ["M", "F", "O"])
         
         if st.form_submit_button("Register"):
-            # Backend validation check
             if bank.valid_mail(email) and bank.valid_contect(phone):
                 info = {
                     "First_Name": f_name, 
@@ -51,7 +59,6 @@ elif choice == "🆕 Create Account":
                     "Phone_num": int(phone),
                     "gender": gender
                 }
-                # Calling your backend logic method
                 acc_no = bank.creatAccount_logic(info)
                 st.success(f"🎉 Account Created Successfully! Your A/C No: {acc_no}")
                 st.balloons()
@@ -82,7 +89,7 @@ elif choice == "💸 Transactions":
             if t_type == "Deposit":
                 if amt <= 50000:
                     user["Balance"] += amt
-                    bank._Bank__update() # Updating database
+                    bank._Bank__update()
                     st.success(f"₹{amt} Deposited! New Balance: ₹{user['Balance']}")
                 else: st.warning("Deposit limit is ₹50,000")
             else:
@@ -101,11 +108,9 @@ elif choice == "🔍 View Details":
         user = bank.varification_logic(acc, p)
         if user:
             st.write("### Account Summary")
-            st.json(user) # Professional JSON view
+            st.json(user)
         else:
             st.error("Access Denied!")
-
-# --- Is section ko choice == "Details" ke niche add karo ---
 
 elif choice == "⚙️ Update/Delete":
     st.subheader("Manage Your Account")
@@ -117,7 +122,6 @@ elif choice == "⚙️ Update/Delete":
         if user:
             st.success(f"Verified: {user['First_Name']}")
             
-            # --- UPDATE SECTION ---
             st.markdown("### 📝 Update Details")
             st.info(bank.tc_rules["update_policy"])
             
@@ -131,7 +135,7 @@ elif choice == "⚙️ Update/Delete":
                         user["Email"] = new_mail
                         user["Phone_num"] = int(new_phone)
                         user["PIN"] = int(new_pin)
-                        bank._Bank__update() # Data save karo
+                        bank._Bank__update()
                         st.success("✅ Details Updated Successfully!")
                         st.rerun()
                     else:
@@ -139,35 +143,28 @@ elif choice == "⚙️ Update/Delete":
 
             st.markdown("---")
             
-            # --- DELETE SECTION ---
             st.markdown("### ⚠️ Danger Zone")
             if st.button("❌ Delete My Account"):
-                # Hum yahan seedha data list se remove karenge
                 Bank._Bank__data.remove(user)
                 bank._Bank__update()
                 st.warning("Account Deleted! Redirecting...")
-                st.balloons() # Thoda maza delete pe bhi! 😂
+                st.balloons()
                 st.rerun()
         else:
             st.error("Invalid Credentials")
-            
-import pandas as pd
-import plotly.express as px # Charts ke liye
 
-if choice == "📊 Admin Analytics":
+# --- 3. ADMIN ANALYTICS SECTION ---
+elif choice == "📊 Admin Analytics":
     st.subheader("Bank Performance Insights")
     df = pd.DataFrame(Bank._Bank__data)
     
     if not df.empty:
-        # Total Wealth in Bank
         total_val = df['Balance'].sum()
         st.metric("Total Bank Deposits", f"₹{total_val}")
         
-        # Gender Distribution Chart
         fig = px.pie(df, names='gender', title='Gender Distribution')
         st.plotly_chart(fig)
         
-        # Age Distribution
         fig2 = px.histogram(df, x="Age", title="User Age Groups")
         st.plotly_chart(fig2)
     else:
